@@ -39,7 +39,10 @@ function FeedbackForm() {
           field="fullname"
           changeData={dataChangeHandler}
           value={formData.fullname}
-          validator={Validator.fullnameOnChange}
+          validator={{
+            onChange: Validator.fullnameOnChange,
+            isValid: Validator.fullnameIsInvalid,
+          }}
         />
         <Input
           className="feedback__text-field"
@@ -48,14 +51,17 @@ function FeedbackForm() {
           field="email"
           changeData={dataChangeHandler}
           value={formData.email}
-          validator={Validator.emailOnChange}
+          validator={{
+            onChange: Validator.emailOnChange,
+            isValid: Validator.emailIsInvalid,
+          }}
         />
         <Input
           className="feedback__text-field"
           type="tel"
           placeholder="Phone number"
           value={formData.phone}
-          validator={Validator.phoneOnChange}
+          validator={{ onChange: Validator.phoneOnChange }}
           field="phone"
           changeData={dataChangeHandler}
         />
@@ -63,12 +69,15 @@ function FeedbackForm() {
           className="feedback__text-field"
           type="date"
           value={formData.date}
+          min="1922-07-29"
+          max="2017-07-29"
         />
         <Input
-          className="feedback__text-field feedback__message-field "
+          className="feedback__text-field"
           type="textfield"
           placeholder="Message"
           value={formData.message}
+          validator={{ isValid: Validator.messageIsInvalid }}
         />
       </div>
     </form>

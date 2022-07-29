@@ -23,18 +23,27 @@ $shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
     width: 100%
     display: flex
     flex-direction: column
-    row-gap: 16px
+    row-gap: 10px
 
   &__text-field
-    @include fonts.h5
     position: relative
     width: 100%
-    height: 30px
-    padding: 1px 10px
-    outline: none
-    border-radius: 5px
-    border: none
-    box-shadow: $shadow
+    height: fit-content
+
+    &__input
+      @include fonts.h5
+      position: relative
+      width: 100%
+      height: 30px
+      padding: 1px 10px
+      outline: none
+      border-radius: 5px
+      border: none
+      box-shadow: $shadow
+
+  .error
+    position: relative
+    border: solid 2px colors.$error
 
     &[type="date"]::-webkit-calendar-picker-indicator
       background: transparent
@@ -52,3 +61,14 @@ $shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
     height: 240px
     padding: 10px 10px
     resize: none
+
+  &__error
+    @include fonts.error
+    padding: 5px 10px
+    border-radius: 5px
+    max-height: 0px
+    overflow: hidden
+    transition: all .7s ease
+
+  .visible
+    max-height: 200px
