@@ -4,6 +4,7 @@ interface IValidator {
   phoneOnChange: Function,
   fullnameIsInvalid: Function,
   emailIsInvalid:Function,
+  phoneIsInvalid:Function,
   messageIsInvalid: Function
 }
 
@@ -102,6 +103,27 @@ const Validator:IValidator = {
 
     return res;
   },
+
+  phoneIsInvalid: (phone:string):IValidOut => {
+    const res = {result:false, message: ""};
+
+    if (phone[0] === "+" && phone[1] !== " " && phone[2] !== " " ){
+      return res
+    }
+    if (phone[0] === "+" && phone.length < 18){
+      res.result = true;
+      res.message = "Phone number shoud be 18 characters length";
+    }
+    if (phone[0] !== "+" && phone.length < 17){
+      res.result = true;
+      res.message = "Phone number shoud be 17 characters length";
+    }
+    
+
+
+    return res
+  },
+
   messageIsInvalid: (message:string):IValidOut => {
     const res = {result:false, message: ""};
     

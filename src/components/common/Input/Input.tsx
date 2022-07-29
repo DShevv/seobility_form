@@ -1,33 +1,33 @@
 import React, { KeyboardEvent, useEffect, useState } from "react";
 import { useDebounce } from "../../../hooks/debounce";
+import { IformData } from "../../../types/types";
 
 interface InputProps {
   type: string;
+  field: string;
+  changeData: Function;
   className?: string;
   placeholder?: string;
-  value: any;
-  field?: string;
-  changeData?: Function;
   validator?: {
     onChange?: Function;
     isValid?: Function;
   };
   min?: string;
   max?: string;
+  delay?: number;
 }
 
 function Input({
   type,
   className,
   placeholder,
-  value,
   field,
   validator,
   changeData,
   min,
   max,
 }: InputProps) {
-  const [data, setData] = useState(value);
+  const [data, setData] = useState("");
   const debounces = useDebounce(data, 600);
   const [error, setError] = useState({
     result: false,
@@ -35,9 +35,23 @@ function Input({
   });
 
   useEffect(() => {
-    changeData && changeData(field, data);
+    if (
+      !error.result &&
+      debounces !== "" &&
+      validator?.isValid &&
+      !validator?.isValid(debounces).result
+    ) {
+      changeData((pstate: IformData) => {
+        return { ...pstate, [field]: debounces };
+      });
+    }
+    if (!validator?.isValid) {
+      changeData((pstate: IformData) => {
+        return { ...pstate, [field]: debounces };
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, field]);
+  }, [debounces, field, error.result]);
 
   useEffect(() => {
     if (debounces !== "") {
