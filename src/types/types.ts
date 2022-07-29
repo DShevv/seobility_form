@@ -5,3 +5,16 @@ export interface IformData {
   date: string;
   message: string;
 }
+
+export interface IValidOut {
+  result: boolean,
+  message: string
+}
+
+export interface IDataError {
+  fullname: IValidOut;
+  email: IValidOut;
+  phone: IValidOut;
+  date: IValidOut;
+  message: IValidOut;
+}

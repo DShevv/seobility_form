@@ -1,3 +1,5 @@
+import { IValidOut } from "../types/types";
+
 interface IValidator {
   fullnameOnChange: Function,
   emailOnChange: Function,
@@ -5,13 +7,11 @@ interface IValidator {
   fullnameIsInvalid: Function,
   emailIsInvalid:Function,
   phoneIsInvalid:Function,
-  messageIsInvalid: Function
+  messageIsInvalid: Function,
+  dateIsInvalid:Function
 }
 
-interface IValidOut {
-  result: boolean,
-  message?: string
-}
+
 
 const Validator:IValidator = {
   fullnameOnChange: (event:React.ChangeEvent<HTMLInputElement>):string => {
@@ -27,7 +27,7 @@ const Validator:IValidator = {
     email = email.replace(/[^a-zA-Z0-9+@.]/g,"")
     return email
   },
-   phoneOnChange: (event:React.ChangeEvent<HTMLInputElement>):string => {
+  phoneOnChange: (event:React.ChangeEvent<HTMLInputElement>):string => {
  
     let cursorStart = event.target?.selectionStart,
         numbers = event.target.value.replace(/\D/g,""),
@@ -129,6 +129,16 @@ const Validator:IValidator = {
     
     if(message.length < 10){
       res.message =  "Minimum length of message is 10 characters";
+      res.result = true;
+    }
+    
+    return res;
+  },
+  dateIsInvalid: (date:string):IValidOut => {
+    const res = {result:false, message: ""};
+    
+    if(date.length < 1){
+      res.message =  "Enter the date";
       res.result = true;
     }
     

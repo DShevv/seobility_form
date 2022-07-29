@@ -1,11 +1,12 @@
 import React, { KeyboardEvent, useEffect, useState } from "react";
 import { useDebounce } from "../../../hooks/debounce";
-import { IformData } from "../../../types/types";
+import { IformData, IValidOut } from "../../../types/types";
 
 interface InputProps {
   type: string;
   field: string;
   changeData: Function;
+  isError: IValidOut;
   className?: string;
   placeholder?: string;
   validator?: {
@@ -26,18 +27,19 @@ function Input({
   changeData,
   min,
   max,
+  isError,
 }: InputProps) {
   const [data, setData] = useState("");
   const debounces = useDebounce(data, 600);
-  const [error, setError] = useState({
-    result: false,
-    message: "",
-  });
+  const [error, setError] = useState<IValidOut>(isError);
+
+  useEffect(() => {
+    setError(isError);
+  }, [isError]);
 
   useEffect(() => {
     if (
       !error.result &&
-      debounces !== "" &&
       validator?.isValid &&
       !validator?.isValid(debounces).result
     ) {
@@ -45,7 +47,12 @@ function Input({
         return { ...pstate, [field]: debounces };
       });
     }
-    if (!validator?.isValid) {
+    if (!error.result && !validator?.isValid) {
+      changeData((pstate: IformData) => {
+        return { ...pstate, [field]: debounces };
+      });
+    }
+    if (debounces === "") {
       changeData((pstate: IformData) => {
         return { ...pstate, [field]: debounces };
       });
@@ -57,9 +64,9 @@ function Input({
     if (debounces !== "") {
       validator?.isValid && setError({ ...validator?.isValid(debounces) });
     } else {
-      setError({ result: false, message: "" });
+      !isError.result && setError({ result: false, message: "" });
     }
-  }, [debounces, validator]);
+  }, [debounces, validator, isError.result]);
 
   const keyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
     if (
