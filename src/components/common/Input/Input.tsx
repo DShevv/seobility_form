@@ -3,6 +3,7 @@ import { useDebounce } from "../../../hooks/debounce";
 import { IformData, IValidOut } from "../../../types/types";
 
 interface InputProps {
+  value: string;
   type: string;
   field: string;
   changeData: Function;
@@ -19,6 +20,7 @@ interface InputProps {
 }
 
 function Input({
+  value,
   type,
   className,
   placeholder,
@@ -29,13 +31,19 @@ function Input({
   max,
   isError,
 }: InputProps) {
-  const [data, setData] = useState("");
+  const [data, setData] = useState(value ? value : "");
   const debounces = useDebounce(data, 600);
   const [error, setError] = useState<IValidOut>(isError);
 
   useEffect(() => {
     setError(isError);
   }, [isError]);
+
+  useEffect(() => {
+    if (value === "") {
+      setData("");
+    }
+  }, [value]);
 
   useEffect(() => {
     if (
@@ -98,7 +106,7 @@ function Input({
           value={data}
           onChange={changeHandlerTextArea}
           className={`${className + "__input"} feedback__message-field ${
-            error.result && "error"
+            error.result && "feedback__input__error"
           }`}
           placeholder={placeholder}
           maxLength={300}
@@ -112,7 +120,9 @@ function Input({
   return (
     <div className={className}>
       <input
-        className={`${className + "__input"} ${error.result && "error"}`}
+        className={`${className + "__input"} ${
+          error.result && "feedback__input__error"
+        }`}
         type={type}
         placeholder={placeholder}
         onChange={changeHandler}

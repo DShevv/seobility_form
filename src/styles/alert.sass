@@ -1,0 +1,36 @@
+@use 'colors'
+@use 'fonts'
+
+.alert
+  @include fonts.h5
+
+  position: absolute
+  top: calc(100% + 10px)
+  left: 50%
+  width: 300px
+  padding: 20px
+  transform: translateX(-50%)
+  border-radius: 5px
+  border: none
+  box-shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
+  color: colors.$primary
+  transition: all .4s ease
+  z-index: 11
+
+.alert.success
+  background: colors.$alert-success
+
+.alert.error
+  background: colors.$alert-error
+
+.close
+  position: absolute
+  top: 7px
+  right: 7px
+  width: 15px
+  height: 15px
+  outline: none
+  border: none
+  background-color: transparent
+  background-image: url('./../assets/close.svg')
+  cursor: pointer

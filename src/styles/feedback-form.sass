@@ -4,6 +4,7 @@
 $shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
 
 .feedback
+  position: relative
   width: 320px
   height: max-content
   min-height: 500px
@@ -41,6 +42,10 @@ $shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
       border: none
       box-shadow: $shadow
 
+      &__error
+        position: relative
+        border: solid 2px colors.$error
+
       &[type="date"]::-webkit-calendar-picker-indicator
         background: transparent
         bottom: 0
@@ -52,10 +57,6 @@ $shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
         right: 0
         top: 0
         width: 100%
-
-  .error
-    position: relative
-    border: solid 2px colors.$error
 
   &__message-field
     height: 240px
@@ -90,3 +91,11 @@ $shadow: 0px 1px 31px -5px rgba(34, 60, 80, 0.2)
 
     &:focus
       background-color: colors.$text-default
+
+    &:disabled
+      background-color: colors.$secondary
+      background-image: url('./../assets/loading.svg')
+      background-position: center
+      background-size: 9%
+      background-repeat: no-repeat
+      cursor: default

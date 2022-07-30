@@ -18,3 +18,9 @@ export interface IDataError {
   date: IValidOut;
   message: IValidOut;
 }
+
+export interface IResponseData {
+  status:string | boolean,
+  message:string,
+}
+

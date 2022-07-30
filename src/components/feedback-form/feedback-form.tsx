@@ -4,6 +4,8 @@ import Validator from "../../utils/validation";
 import Input from "../common/Input/Input";
 import { IDataError, IformData } from "../../types/types";
 import Button from "../common/Button/Button";
+import { usePostData } from "../../hooks/postData";
+import Alert from "../common/Alert/Alert";
 
 function FeedbackForm() {
   const [formData, setFormData] = useState<IformData>({
@@ -20,14 +22,21 @@ function FeedbackForm() {
     date: { result: false, message: "" },
     message: { result: false, message: "" },
   });
+  const { pushData, isLoading, response, setResponse } = usePostData(
+    `${process.env.REACT_APP_SERVER_URL}`
+  );
 
   useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+    if (response?.status) {
+      setFormData({
+        fullname: "",
+        email: "",
+        phone: "",
+        date: "",
+        message: "",
+      });
+    }
+  }, [response]);
 
   const isInValidData = (): boolean => {
     const res: IDataError = {} as IDataError;
@@ -46,9 +55,15 @@ function FeedbackForm() {
     return false;
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(isInValidData());
+    if (!isInValidData()) {
+      await pushData(formData);
+    }
+  };
+
+  const closeAlertHandler = () => {
+    setResponse(undefined);
   };
 
   return (
@@ -58,9 +73,19 @@ function FeedbackForm() {
       noValidate
       autoComplete="off"
     >
+      {response ? (
+        <Alert
+          type={response.status ? "success" : "error"}
+          message={response.message}
+          onClose={closeAlertHandler}
+        />
+      ) : (
+        ""
+      )}
       <div className="feedback__title">Leave us feedback</div>
       <div className="feedback__fields">
         <Input
+          value={formData.fullname}
           isError={errors.fullname}
           className="feedback__text-field"
           type="text"
@@ -73,6 +98,7 @@ function FeedbackForm() {
           }}
         />
         <Input
+          value={formData.email}
           isError={errors.email}
           className="feedback__text-field"
           type="text"
@@ -85,6 +111,7 @@ function FeedbackForm() {
           }}
         />
         <Input
+          value={formData.phone}
           isError={errors.phone}
           className="feedback__text-field"
           type="tel"
@@ -97,6 +124,7 @@ function FeedbackForm() {
           changeData={setFormData}
         />
         <Input
+          value={formData.date}
           isError={errors.date}
           className="feedback__text-field"
           type="date"
@@ -107,6 +135,7 @@ function FeedbackForm() {
           max="2017-07-29"
         />
         <Input
+          value={formData.message}
           isError={errors.message}
           className="feedback__text-field"
           type="textfield"
@@ -116,7 +145,9 @@ function FeedbackForm() {
           validator={{ isValid: Validator.messageIsInvalid }}
         />
       </div>
-      <Button classname="feedback__submit">Submit</Button>
+      <Button classname="feedback__submit" disabled={isLoading}>
+        {!isLoading ? "Submit" : ""}
+      </Button>
     </form>
   );
 }
